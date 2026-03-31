@@ -56,7 +56,7 @@
         .progress-bar { height: 100%; background: linear-gradient(90deg, #00BFA5, #00D4B4); transition: width 0.5s cubic-bezier(0.34,1.56,0.64,1); width: 0%; }
 
         /* ===== MAIN ===== */
-        .main { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 40px 24px 80px; overflow-y: auto; }
+        .main { flex: 1; display: flex; align-items: flex-start; justify-content: center; padding: 40px 24px 40px; overflow-y: auto; }
 
         /* ===== CARD ===== */
         .card {
@@ -634,15 +634,13 @@
         }
         .engine-live.show { opacity: 1; }
 
-        /* Footer nav */
-        .footer {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: #fff; border-top: 1px solid #E2E8F0;
-            padding: 14px 32px; display: flex; justify-content: space-between; align-items: center;
-            z-index: 10;
+        /* Card nav row (inline navigation) */
+        .card-nav {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 24px; padding-top: 20px; border-top: 1px solid #EEF2F6;
         }
-        .footer-step { font-size: 13px; color: #94A3B8; font-weight: 600; }
-        .footer-btns { display: flex; gap: 12px; }
+        .card-nav-label { font-size: 12px; color: #94A3B8; font-weight: 600; }
+        .card-nav-btns { display: flex; gap: 10px; }
 
         /* Success overlay */
         .overlay {
@@ -679,6 +677,207 @@
 
         h2 { font-size: 16px; font-weight: 700; color: #0F172A; margin: 24px 0 14px; }
         h2:first-of-type { margin-top: 0; }
+
+        /* ===== GOOGLE OAUTH OVERLAY ===== */
+        .google-oauth-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+            z-index: 200; align-items: center; justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+        .google-oauth-overlay.show { display: flex; }
+        .google-oauth-modal {
+            background: #fff; border-radius: 12px; width: 420px; max-width: 92vw;
+            box-shadow: 0 24px 48px rgba(0,0,0,0.25);
+            animation: modalPop 0.35s ease;
+            overflow: hidden;
+        }
+        .goauth-header {
+            padding: 28px 32px 20px; text-align: center;
+            border-bottom: 1px solid #E8EAED;
+        }
+        .goauth-header .g-logo { margin-bottom: 16px; }
+        .goauth-header h3 { font-size: 22px; font-weight: 400; color: #202124; margin-bottom: 6px; font-family: 'Google Sans', 'Segoe UI', sans-serif; }
+        .goauth-header p { font-size: 14px; color: #5F6368; }
+        .goauth-account {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 32px; background: #F8F9FA; border-bottom: 1px solid #E8EAED;
+            cursor: pointer; transition: background 0.15s;
+        }
+        .goauth-account:hover { background: #F1F3F4; }
+        .goauth-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: linear-gradient(135deg, #4285F4, #34A853);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 700; font-size: 14px; flex-shrink: 0;
+        }
+        .goauth-account-info .account-name { font-size: 14px; font-weight: 600; color: #202124; }
+        .goauth-account-info .account-email { font-size: 12px; color: #5F6368; }
+        .goauth-perms {
+            padding: 20px 32px;
+        }
+        .goauth-perms-title { font-size: 14px; font-weight: 600; color: #202124; margin-bottom: 14px; }
+        .goauth-perm-item {
+            display: flex; align-items: flex-start; gap: 12px;
+            padding: 10px 0; font-size: 13px; color: #3C4043; line-height: 1.5;
+        }
+        .goauth-perm-icon {
+            width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; margin-top: 1px;
+        }
+        .goauth-perm-icon.blue { background: #E8F0FE; color: #1A73E8; }
+        .goauth-perm-icon.green { background: #E6F4EA; color: #1E8E3E; }
+        .goauth-perm-icon.orange { background: #FEF7E0; color: #E37400; }
+        .goauth-footer {
+            padding: 16px 32px 24px; display: flex; justify-content: flex-end; gap: 12px;
+            border-top: 1px solid #E8EAED;
+        }
+        .goauth-btn-cancel {
+            padding: 10px 24px; border: 1px solid #DADCE0; border-radius: 6px;
+            background: #fff; color: #1A73E8; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: background 0.15s; font-family: inherit;
+        }
+        .goauth-btn-cancel:hover { background: #F6F9FE; }
+        .goauth-btn-allow {
+            padding: 10px 24px; border: none; border-radius: 6px;
+            background: #1A73E8; color: #fff; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: background 0.15s; font-family: inherit;
+        }
+        .goauth-btn-allow:hover { background: #1557B0; }
+        .goauth-privacy {
+            padding: 0 32px 20px; font-size: 11px; color: #9AA0A6; line-height: 1.6;
+        }
+        .goauth-privacy a { color: #1A73E8; text-decoration: none; }
+        .goauth-loading {
+            padding: 40px 32px; text-align: center; display: none;
+        }
+        .goauth-loading.show { display: block; }
+        .goauth-loading .g-spinner {
+            width: 36px; height: 36px; border: 4px solid #E8EAED;
+            border-top-color: #1A73E8; border-radius: 50%;
+            animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+        }
+
+        /* ===== DOCUSIGN SIGNING OVERLAY ===== */
+        .docusign-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            z-index: 200; flex-direction: column;
+            backdrop-filter: blur(3px);
+        }
+        .docusign-overlay.show { display: flex; }
+        .ds-topbar {
+            background: #1B1C20; padding: 10px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            animation: slideIn 0.3s ease;
+        }
+        .ds-logo { display: flex; align-items: center; gap: 8px; }
+        .ds-logo-icon {
+            width: 28px; height: 28px; border-radius: 4px;
+            background: #FFD700; display: flex; align-items: center;
+            justify-content: center; font-size: 16px; font-weight: 800; color: #1B1C20;
+        }
+        .ds-logo-text { color: #fff; font-size: 15px; font-weight: 600; letter-spacing: 0.5px; }
+        .ds-status { display: flex; align-items: center; gap: 8px; }
+        .ds-status-dot { width: 8px; height: 8px; border-radius: 50%; background: #FFD700; }
+        .ds-status-text { color: #A0A4AB; font-size: 12px; }
+        .ds-body {
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            padding: 24px; overflow-y: auto;
+            animation: slideIn 0.4s ease 0.1s both;
+        }
+        .ds-document {
+            background: #fff; width: 520px; max-width: 96vw; border-radius: 4px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            max-height: calc(100vh - 160px); overflow-y: auto;
+        }
+        .ds-doc-header {
+            padding: 24px 28px; border-bottom: 2px solid #1B1C20;
+        }
+        .ds-doc-header h3 {
+            font-size: 18px; font-weight: 700; color: #1B1C20; margin-bottom: 4px;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+        .ds-doc-header p { font-size: 12px; color: #6B7280; }
+        .ds-doc-body { padding: 24px 28px; font-size: 13px; color: #374151; line-height: 1.8; }
+        .ds-doc-body .ds-clause { margin-bottom: 16px; }
+        .ds-doc-body .ds-clause-title { font-weight: 700; color: #1B1C20; margin-bottom: 4px; }
+        .ds-sig-section {
+            margin: 16px 0; padding: 20px; border: 2px dashed #FFD700;
+            border-radius: 8px; background: #FFFDF0; position: relative;
+        }
+        .ds-sig-label {
+            position: absolute; top: -10px; left: 16px; background: #FFD700;
+            color: #1B1C20; font-size: 10px; font-weight: 800; padding: 2px 10px;
+            border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .ds-sig-arrow {
+            position: absolute; left: -32px; top: 50%; transform: translateY(-50%);
+            font-size: 24px; color: #FFD700; animation: pulseArrow 1.2s ease infinite;
+        }
+        @keyframes pulseArrow { 0%,100% { transform: translateY(-50%) translateX(0); } 50% { transform: translateY(-50%) translateX(6px); } }
+        .ds-sig-name {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 28px; color: #1B1C20; font-style: italic;
+            text-align: center; padding: 12px 0; opacity: 0;
+            border-bottom: 2px solid #1B1C20;
+        }
+        .ds-sig-name.signed { opacity: 1; animation: slideIn 0.4s ease forwards; }
+        .ds-sig-meta {
+            display: flex; justify-content: space-between; margin-top: 8px;
+            font-size: 10px; color: #9CA3AF;
+        }
+        .ds-initial-section {
+            margin: 16px 0; padding: 14px 20px; border: 2px dashed #3B82F6;
+            border-radius: 8px; background: #EFF6FF; display: flex;
+            align-items: center; gap: 14px; position: relative;
+        }
+        .ds-initial-label {
+            position: absolute; top: -10px; left: 16px; background: #3B82F6;
+            color: #fff; font-size: 10px; font-weight: 800; padding: 2px 10px;
+            border-radius: 3px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .ds-initial-box {
+            width: 52px; height: 42px; border: 2px solid #3B82F6;
+            border-radius: 4px; background: #fff; display: flex;
+            align-items: center; justify-content: center;
+            font-family: 'Georgia', serif; font-size: 18px; font-weight: 700;
+            color: #1E40AF; opacity: 0; flex-shrink: 0;
+        }
+        .ds-initial-box.signed { opacity: 1; animation: slideIn 0.3s ease forwards; }
+        .ds-initial-text { font-size: 12px; color: #374151; line-height: 1.5; }
+        .ds-bottombar {
+            background: #1B1C20; padding: 14px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            animation: slideIn 0.3s ease 0.2s both;
+        }
+        .ds-btn-sign {
+            padding: 12px 32px; border: none; border-radius: 6px;
+            background: #FFD700; color: #1B1C20; font-size: 15px;
+            font-weight: 800; cursor: pointer; transition: all 0.2s;
+            font-family: inherit; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .ds-btn-sign:hover { background: #FFC600; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,215,0,0.3); }
+        .ds-btn-sign:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+        .ds-btn-sign.complete { background: #22C55E; color: #fff; }
+        .ds-btn-other {
+            padding: 8px 16px; border: 1px solid #3B3C42; border-radius: 4px;
+            background: transparent; color: #A0A4AB; font-size: 12px;
+            cursor: pointer; font-family: inherit;
+        }
+        .ds-progress {
+            display: flex; align-items: center; gap: 8px; color: #A0A4AB; font-size: 12px;
+        }
+        .ds-progress-bar {
+            width: 120px; height: 4px; background: #3B3C42; border-radius: 2px; overflow: hidden;
+        }
+        .ds-progress-fill {
+            height: 100%; background: #FFD700; border-radius: 2px;
+            transition: width 0.5s ease; width: 0%;
+        }
+        .ds-checkmark-complete {
+            display: flex; align-items: center; gap: 6px;
+            color: #22C55E; font-size: 13px; font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -737,28 +936,93 @@
             <div class="trust"><b>&#10003;</b> Cancel anytime</div>
             <div class="trust"><b>&#10003;</b> 2-min setup</div>
         </div>
+        <div class="card-nav">
+            <span class="card-nav-label">Step 1 of 7</span>
+            <div class="card-nav-btns">
+                <button class="btn-primary" onclick="goNext()">Next &rarr;</button>
+            </div>
+        </div>
     </div>
 
     <!-- STEP 2: Contact Info -->
     <div class="card" data-step="2">
-        <h1>Contact Information</h1>
-        <p class="subtitle">We pulled your details from Google. Confirm or edit below.</p>
+        <h1>Find Your Business</h1>
+        <p class="subtitle">Search for your business below. We'll pull your details from Google Places so you don't have to type them.</p>
 
-        <div class="info-banner purple">
-            <b>AI Pre-filled from Google Business Profile</b> &mdash; All fields populated automatically. Confirm everything looks correct.
+        <!-- Google Places Autocomplete Search -->
+        <div id="placesSearchSection">
+            <div class="form-row full">
+                <div class="form-group">
+                    <label>BUSINESS NAME OR ADDRESS</label>
+                    <div class="field-wrap" style="position:relative;">
+                        <input type="text" id="placesSearchInput" placeholder="Start typing your business name..." style="padding-right:40px;" oninput="handlePlacesSearch(this.value)">
+                        <span class="field-icon" style="color:#009688;">&#128269;</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Places Autocomplete Results (simulated) -->
+            <div id="placesResults" style="display:none; background:#fff; border:1.5px solid #E2E8F0; border-radius:10px; margin-top:-10px; margin-bottom:18px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.08);">
+                <div class="places-result" onclick="selectPlacesResult()" style="padding:14px 16px; cursor:pointer; transition:background 0.15s; border-bottom:1px solid #F1F5F9; display:flex; align-items:flex-start; gap:12px;" onmouseenter="this.style.background='#F0FBF9'" onmouseleave="this.style.background='#fff'">
+                    <span style="font-size:20px; margin-top:2px;">&#128205;</span>
+                    <div>
+                        <div style="font-weight:700; font-size:14px; color:#0F172A;">Ty-D-Up Mobile Detailing</div>
+                        <div style="font-size:12px; color:#64748B; margin-top:2px;">48 Hammers Rd, Gruetli-Laager, TN 37339</div>
+                        <div style="font-size:11px; color:#94A3B8; margin-top:2px;">Auto Detailing &middot; 4.9 &#9733; (47 reviews)</div>
+                    </div>
+                    <span style="background:#E0F7F4; color:#009688; padding:3px 8px; border-radius:5px; font-size:10px; font-weight:700; margin-left:auto; white-space:nowrap;">Google Places</span>
+                </div>
+                <div style="padding:10px 16px; display:flex; align-items:center; gap:8px; cursor:pointer; color:#64748B; font-size:13px;" onmouseenter="this.style.background='#F8FAFB'" onmouseleave="this.style.background='#fff'" onclick="showManualEntry()">
+                    <span>&#10010;</span> My business isn't listed &mdash; enter manually
+                </div>
+            </div>
         </div>
 
-        <div class="form-row">
-            <div class="form-group"><label>First Name</label><div class="field-wrap ai-wrap skeleton-field" data-value="Ty"><input type="text" value="Ty" class="ai-field" disabled><span class="typewriter-cursor"></span><span class="confirmed-tag">Confirmed</span></div></div>
-            <div class="form-group"><label>Last Name</label><div class="field-wrap ai-wrap skeleton-field" data-value="Bray"><input type="text" value="Bray" class="ai-field" disabled><span class="typewriter-cursor"></span><span class="confirmed-tag">Confirmed</span></div></div>
-        </div>
-        <div class="form-row full"><div class="form-group"><label>Email Address</label><div class="field-wrap ai-wrap skeleton-field" data-value="tydupdetailing@gmail.com"><input type="email" value="tydupdetailing@gmail.com" class="ai-field" disabled><span class="typewriter-cursor"></span><span class="confirmed-tag">Confirmed</span></div></div></div>
-        <div class="form-row">
-            <div class="form-group"><label>Phone Number</label><div class="field-wrap ai-wrap skeleton-field" data-value="(423) 654-0741"><input type="tel" value="(423) 654-0741" class="ai-field" disabled><span class="typewriter-cursor"></span><span class="confirmed-tag">Confirmed</span></div></div>
-            <div class="form-group"><label>Cell Phone</label><div class="field-wrap ai-wrap skeleton-field" data-value="(423) 654-0741"><input type="tel" value="(423) 654-0741" class="ai-field" disabled><span class="typewriter-cursor"></span><span class="confirmed-tag">Confirmed</span></div></div>
+        <!-- Contact Info (hidden until business selected) -->
+        <div id="contactFieldsSection" style="display:none;">
+            <div class="info-banner purple">
+                <b>AI Pre-filled from Google Business Profile</b> &mdash; All fields populated automatically from your Google Places listing. Confirm everything looks correct.
+            </div>
+
+            <div class="form-row">
+                <div class="form-group"><label>First Name</label><div class="field-wrap ai-wrap skeleton-field" data-value="Ty"><input type="text" value="Ty" class="ai-field" disabled><span class="typewriter-cursor"></span><span class="confirmed-tag">Confirmed</span></div></div>
+                <div class="form-group"><label>Last Name</label><div class="field-wrap ai-wrap skeleton-field" data-value="Bray"><input type="text" value="Bray" class="ai-field" disabled><span class="typewriter-cursor"></span><span class="confirmed-tag">Confirmed</span></div></div>
+            </div>
+            <div class="form-row full"><div class="form-group"><label>Email Address</label><div class="field-wrap ai-wrap skeleton-field" data-value="tydupdetailing@gmail.com"><input type="email" value="tydupdetailing@gmail.com" class="ai-field" disabled><span class="typewriter-cursor"></span><span class="confirmed-tag">Confirmed</span></div></div></div>
+            <div class="form-row">
+                <div class="form-group"><label>Phone Number</label><div class="field-wrap ai-wrap skeleton-field" data-value="(423) 654-0741"><input type="tel" value="(423) 654-0741" class="ai-field" disabled><span class="typewriter-cursor"></span><span class="confirmed-tag">Confirmed</span></div></div>
+                <div class="form-group"><label>Cell Phone</label><div class="field-wrap ai-wrap skeleton-field" data-value="(423) 654-0741"><input type="tel" value="(423) 654-0741" class="ai-field" disabled><span class="typewriter-cursor"></span><span class="confirmed-tag">Confirmed</span></div></div>
+            </div>
+
+            <button class="btn-primary full" id="confirmAllBtn" style="opacity:0; pointer-events:none; transition: all 0.4s ease;">&#10024; Confirm All Fields</button>
         </div>
 
-        <button class="btn-primary full" id="confirmAllBtn" style="opacity:0; pointer-events:none; transition: all 0.4s ease;">&#10024; Confirm All Fields</button>
+        <!-- Manual Entry Fallback (hidden) -->
+        <div id="manualEntrySection" style="display:none;">
+            <div class="info-banner yellow">
+                <b>Manual Entry</b> &mdash; No worries! Enter your contact details below and we'll find your Google listing in the next step.
+            </div>
+
+            <div class="form-row">
+                <div class="form-group"><label>First Name</label><div class="field-wrap"><input type="text" placeholder="First name"></div></div>
+                <div class="form-group"><label>Last Name</label><div class="field-wrap"><input type="text" placeholder="Last name"></div></div>
+            </div>
+            <div class="form-row full"><div class="form-group"><label>Email Address</label><div class="field-wrap"><input type="email" placeholder="you@business.com"></div></div></div>
+            <div class="form-row full"><div class="form-group"><label>Business Name</label><div class="field-wrap"><input type="text" placeholder="Your business name"></div></div></div>
+            <div class="form-row">
+                <div class="form-group"><label>Phone Number</label><div class="field-wrap"><input type="tel" placeholder="(555) 000-0000"></div></div>
+                <div class="form-group"><label>Cell Phone</label><div class="field-wrap"><input type="tel" placeholder="(555) 000-0000"></div></div>
+            </div>
+
+            <button class="btn-primary full" onclick="goNext()" style="margin-top:8px;">Continue &rarr;</button>
+        </div>
+        <div class="card-nav">
+            <span class="card-nav-label">Step 2 of 7</span>
+            <div class="card-nav-btns">
+                <button class="btn-secondary" onclick="goBack()">&larr; Back</button>
+                <button class="btn-primary" onclick="goNext()">Next &rarr;</button>
+            </div>
+        </div>
     </div>
 
     <!-- STEP 3: Plan & Billing -->
@@ -800,6 +1064,13 @@
             <div class="product-card"><h3>Custom Business Page</h3><p>Branded landing page</p></div>
             <div class="product-card"><h3>Call Tracking</h3><p>AI call analytics</p></div>
             <div class="product-card"><h3>CustomerBase</h3><p>CRM & review management</p></div>
+        </div>
+        <div class="card-nav">
+            <span class="card-nav-label">Step 3 of 7</span>
+            <div class="card-nav-btns">
+                <button class="btn-secondary" onclick="goBack()">&larr; Back</button>
+                <button class="btn-primary" onclick="goNext()">Next &rarr;</button>
+            </div>
         </div>
     </div>
 
@@ -875,6 +1146,42 @@
         </div>
 
         <button class="btn-primary full" id="confirmStep4Btn" style="opacity:0; pointer-events:none; transition: all 0.4s ease;">&#10024; Confirm All Fields</button>
+
+        <!-- GBP Manager Authorization Gate (shown after confirm) -->
+        <div id="gbpAuthGate" style="display:none; margin-top:24px;">
+            <div style="height:1px; background:#E2E8F0; margin:0 -44px 24px;"></div>
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                <span style="font-size:22px;">&#128274;</span>
+                <div>
+                    <div style="font-size:16px; font-weight:700; color:#0F172A;">Connect Google Business Profile</div>
+                    <div style="font-size:12px; color:#64748B; margin-top:2px;">Required to verify and manage your listing</div>
+                </div>
+            </div>
+            <div class="info-banner yellow" style="margin-bottom:16px;">
+                <b>Why is this needed?</b> &mdash; AdIQ needs manager-level access to your Google Business Profile to verify your listing, respond to reviews, update hours, and manage your online presence. We use the official <b>Google Business Profile API</b>.
+            </div>
+            <button class="btn-google" id="gbpAuthBtn" onclick="simulateGBPAuth()" style="margin-bottom:12px;">
+                <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+                Authorize Google Business Profile Access
+            </button>
+            <div id="gbpAuthStatus" style="display:none; padding:12px 16px; border-radius:10px; background:#F0FDF4; border:1px solid #BBF7D0; display:flex; align-items:center; gap:10px;">
+                <span style="font-size:18px;">&#9989;</span>
+                <div>
+                    <div style="font-weight:700; font-size:13px; color:#16A34A;">Manager access granted</div>
+                    <div style="font-size:11px; color:#64748B;">Ty-D-Up Mobile Detailing &mdash; via Google Business Profile API</div>
+                </div>
+            </div>
+            <div style="text-align:center; margin-top:6px;">
+                <span style="font-size:11px; color:#94A3B8;">&#128274; OAuth 2.0 &middot; You can revoke access anytime from your Google Account</span>
+            </div>
+        </div>
+        <div class="card-nav">
+            <span class="card-nav-label">Step 4 of 7</span>
+            <div class="card-nav-btns">
+                <button class="btn-secondary" onclick="goBack()">&larr; Back</button>
+                <button class="btn-primary" onclick="goNext()">Next &rarr;</button>
+            </div>
+        </div>
     </div>
 
     <!-- STEP 5: Keywords -->
@@ -938,15 +1245,22 @@
             <div class="kw-row suggested" data-vol="2400"><div class="kw-name">Full detail service <span class="kw-source web">Website</span></div><div class="kw-vol"><div class="kw-vol-bar"><div class="kw-vol-fill" data-width="12"></div></div><div class="kw-vol-num">2.4k</div></div><div class="kw-comp low">Low</div><div class="kw-add-btn" onclick="addSuggested(this)">+</div></div>
             <div class="kw-row suggested" data-vol="480"><div class="kw-name">Ty-D-Up detailing <span class="kw-source biz">Business name</span></div><div class="kw-vol"><div class="kw-vol-bar"><div class="kw-vol-fill" data-width="2"></div></div><div class="kw-vol-num">480</div></div><div class="kw-comp low">Low</div><div class="kw-add-btn" onclick="addSuggested(this)">+</div></div>
         </div>
+        <div class="card-nav">
+            <span class="card-nav-label">Step 5 of 7</span>
+            <div class="card-nav-btns">
+                <button class="btn-secondary" onclick="goBack()">&larr; Back</button>
+                <button class="btn-primary" onclick="goNext()">Next &rarr;</button>
+            </div>
+        </div>
     </div>
 
     <!-- STEP 6: GMB Verify -->
     <div class="card" data-step="6" style="max-width:580px;">
         <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:6px;">
             <h1 style="margin-bottom:0;">Google My Business</h1>
-            <span style="background:#FEF3C7; color:#B45309; padding:5px 12px; border-radius:8px; font-size:11px; font-weight:700;">Requires manager access</span>
+            <span id="gmbAccessBadge" style="background:#E8F5E9; color:#2E7D32; padding:5px 12px; border-radius:8px; font-size:11px; font-weight:700;">&#10003; Manager access granted</span>
         </div>
-        <p class="subtitle">API-driven verification. Priority order: Phone &rarr; SMS &rarr; Email &rarr; Video &rarr; Postcard.</p>
+        <p class="subtitle">Manager access was authorized in Step 4 via Google Business Profile API. Now verify your listing. Priority order: Phone &rarr; SMS &rarr; Email &rarr; Video &rarr; Postcard.</p>
 
         <!-- Data Flow Animation -->
         <div class="data-flow" id="dataFlow">
@@ -1043,6 +1357,13 @@
                 <div class="mm-desc">Ty-D-Up Mobile Detailing &mdash; Gruetli-Laager, TN &mdash; Managed by AdIQ</div>
             </div>
         </div>
+        <div class="card-nav">
+            <span class="card-nav-label">Step 6 of 7</span>
+            <div class="card-nav-btns">
+                <button class="btn-secondary" onclick="goBack()">&larr; Back</button>
+                <button class="btn-primary" onclick="goNext()">Next &rarr;</button>
+            </div>
+        </div>
     </div>
 
     <!-- STEP 7: Partnership Agreement -->
@@ -1065,6 +1386,11 @@
             </table>
         </div>
 
+        <!-- Full Terms Modal Trigger -->
+        <div style="text-align:center; margin-bottom:16px;">
+            <button onclick="document.getElementById('fullTermsModal').style.display='flex'" style="background:none; border:none; color:#009688; font-size:13px; font-weight:600; cursor:pointer; text-decoration:underline; padding:4px 8px;">&#128196; View Full Terms &amp; Conditions</button>
+        </div>
+
         <!-- Acknowledgments -->
         <div class="ack-section">
             <div class="ack-label">ACKNOWLEDGMENTS (ALL REQUIRED TO UNLOCK SIGNATURE)</div>
@@ -1078,8 +1404,13 @@
             </label>
             <label class="ack-item">
                 <input type="checkbox" class="ack-box" onchange="checkAcks()">
-                <span>I agree to the AdIQ Partner Terms of Service and Privacy Policy.</span>
+                <span>I have read and agree to the <a href="#" onclick="event.preventDefault();document.getElementById('fullTermsModal').style.display='flex'" style="color:#009688; text-decoration:underline;">AdIQ Partner Terms of Service</a> and <a href="#" onclick="event.preventDefault();document.getElementById('fullTermsModal').style.display='flex'" style="color:#009688; text-decoration:underline;">Privacy Policy</a>.</span>
             </label>
+        </div>
+
+        <!-- E-Signature Notice -->
+        <div style="background:#FFF7ED; border:1px solid #FED7AA; border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:11px; color:#9A3412; line-height:1.6;">
+            <b>&#128272; E-Signature Disclosure:</b> In production, this signature is captured on the customer's own device using a compliant e-signature solution (IP address, timestamp, and browser fingerprint recorded). This demo shows the visual flow only.
         </div>
 
         <!-- Signature Area -->
@@ -1105,15 +1436,181 @@
         </div>
 
         <div class="engine-live" id="engineLive"></div>
+        <div class="card-nav">
+            <span class="card-nav-label">Step 7 of 7</span>
+            <div class="card-nav-btns">
+                <button class="btn-secondary" onclick="goBack()">&larr; Back</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- FOOTER NAV -->
-<div class="footer">
-    <span class="footer-step" id="footerLabel">Step 1 of 7 &mdash; Sign Up</span>
-    <div class="footer-btns">
-        <button class="btn-secondary" id="backBtn" onclick="goBack()" style="display:none;">&larr; Back</button>
-        <button class="btn-primary" id="nextBtn" onclick="goNext()">Next &rarr;</button>
+
+<!-- FULL TERMS MODAL -->
+<div id="fullTermsModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(15,23,42,0.6); z-index:100; align-items:center; justify-content:center; padding:24px;">
+    <div style="background:#fff; border-radius:16px; max-width:600px; width:100%; max-height:80vh; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <div style="padding:24px 28px 16px; border-bottom:1px solid #E2E8F0; display:flex; justify-content:space-between; align-items:center;">
+            <h2 style="font-size:18px; font-weight:700; color:#0F172A; margin:0;">AdIQ Partner Terms of Service</h2>
+            <button onclick="document.getElementById('fullTermsModal').style.display='none'" style="background:none; border:none; font-size:24px; cursor:pointer; color:#94A3B8; padding:4px;">&times;</button>
+        </div>
+        <div style="padding:20px 28px; overflow-y:auto; flex:1; font-size:13px; color:#334155; line-height:1.8;">
+            <p style="font-weight:700; color:#0F172A; margin-bottom:12px;">1. Service Agreement</p>
+            <p style="margin-bottom:16px;">This Agreement ("Agreement") is entered into between AdIQ Digital Marketing Solutions ("AdIQ") and the business owner ("Client") for the provision of digital marketing and business profile management services. By signing this Agreement, Client authorizes AdIQ to manage their digital presence as outlined herein.</p>
+
+            <p style="font-weight:700; color:#0F172A; margin-bottom:12px;">2. Term &amp; Billing</p>
+            <p style="margin-bottom:16px;">The initial term is six (6) months beginning on the Effective Date. A 90-day grace period applies before billing commences. Monthly investment of $149.99 is billed on the anniversary of the billing start date. After the initial term, the Agreement renews month-to-month and may be cancelled with 30 days written notice.</p>
+
+            <p style="font-weight:700; color:#0F172A; margin-bottom:12px;">3. Google Business Profile Authorization</p>
+            <p style="margin-bottom:16px;">Client grants AdIQ manager-level access to their Google Business Profile via OAuth 2.0. This authorization allows AdIQ to verify the listing, respond to reviews, update business information, and manage the profile on Client's behalf. Client may revoke access at any time via their Google Account settings; however, revocation may impact service delivery.</p>
+
+            <p style="font-weight:700; color:#0F172A; margin-bottom:12px;">4. Services Included</p>
+            <p style="margin-bottom:16px;">Digital 360 monitoring, Business Profile Optimization, AdIQ Score Dashboard, Custom Business Page, Call Tracking, and CustomerBase CRM. Additional services may be added at additional cost with mutual agreement.</p>
+
+            <p style="font-weight:700; color:#0F172A; margin-bottom:12px;">5. Data &amp; Privacy</p>
+            <p style="margin-bottom:16px;">AdIQ collects and processes business data in accordance with its Privacy Policy. Client data is used solely for providing contracted services and generating performance analytics. AdIQ does not sell Client data to third parties.</p>
+
+            <p style="font-weight:700; color:#0F172A; margin-bottom:12px;">6. Cancellation</p>
+            <p style="margin-bottom:16px;">Early termination within the initial 6-month term requires payment of remaining months at 50% of the monthly rate. After the initial term, Client may cancel with 30 days written notice at no penalty. Upon cancellation, AdIQ will transfer all Google Business Profile access back to Client within 5 business days.</p>
+
+            <p style="font-weight:700; color:#0F172A; margin-bottom:12px;">7. Limitation of Liability</p>
+            <p>AdIQ's total liability shall not exceed the total fees paid by Client in the 12 months preceding the claim. AdIQ is not liable for changes to Google's API, algorithm updates, or third-party platform modifications that may affect service delivery.</p>
+        </div>
+        <div style="padding:16px 28px; border-top:1px solid #E2E8F0; text-align:right;">
+            <button onclick="document.getElementById('fullTermsModal').style.display='none'" class="btn-primary" style="padding:10px 24px; font-size:13px;">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- GOOGLE OAUTH OVERLAY -->
+<div class="google-oauth-overlay" id="googleOAuthOverlay">
+    <div class="google-oauth-modal">
+        <!-- Main consent view -->
+        <div id="goauthConsent">
+            <div class="goauth-header">
+                <div class="g-logo">
+                    <svg width="74" height="24" viewBox="0 0 74 24"><path fill="#4285F4" d="M9.24 8.19v2.46h5.88c-.18 1.38-.64 2.39-1.34 3.1-.86.86-2.2 1.8-4.54 1.8-3.62 0-6.45-2.92-6.45-6.54s2.83-6.54 6.45-6.54c1.95 0 3.38.77 4.43 1.76L15.4 2.5C13.94 1.08 11.98 0 9.24 0 4.28 0 .11 4.04.11 9s4.17 9 9.13 9c2.68 0 4.7-.88 6.28-2.52 1.62-1.62 2.13-3.91 2.13-5.75 0-.57-.04-1.1-.13-1.54H9.24zM25.05 6.19c-3.21 0-5.83 2.44-5.83 5.81 0 3.34 2.62 5.81 5.83 5.81s5.83-2.46 5.83-5.81c0-3.37-2.62-5.81-5.83-5.81zm0 9.33c-1.76 0-3.28-1.45-3.28-3.52 0-2.09 1.52-3.52 3.28-3.52s3.28 1.43 3.28 3.52c0 2.07-1.52 3.52-3.28 3.52zm26.95-9.33c-3.21 0-5.83 2.44-5.83 5.81 0 3.34 2.62 5.81 5.83 5.81s5.83-2.46 5.83-5.81c0-3.37-2.62-5.81-5.83-5.81zm0 9.33c-1.76 0-3.28-1.45-3.28-3.52 0-2.09 1.52-3.52 3.28-3.52s3.28 1.43 3.28 3.52c0 2.07-1.52 3.52-3.28 3.52zM38.17 6.19c-3.03 0-5.6 2.59-5.6 5.81 0 3.22 2.57 5.81 5.6 5.81 1.69 0 2.9-.67 3.6-1.46v1.12c0 2.73-1.46 4.33-3.5 4.33-1.73 0-2.78-1.28-3.22-2.36l-2.22.93c.71 1.7 2.58 3.79 5.44 3.79 3.17 0 5.83-2 5.83-6.82V6.54h-2.33v1.07c-.74-.86-2.02-1.42-3.6-1.42zm.26 9.33c-1.76 0-3.22-1.48-3.22-3.52 0-2.06 1.46-3.52 3.22-3.52 1.73 0 3.22 1.46 3.22 3.52 0 2.04-1.49 3.52-3.22 3.52zm22.6-15.14h-2.55V17.5h2.55V.38zm-5.77 10.26l2.9-1.2c-1.22-1.83-3.07-2.88-5.14-2.88-3.17 0-5.7 2.51-5.7 5.81 0 3.46 2.55 5.81 6 5.81 2.08 0 3.88-1.06 4.93-2.67l-2.02-1.35c-.64 1.05-1.65 1.73-2.91 1.73-1.32 0-2.28-.62-2.9-1.82l7.98-3.3-.16-.37c-.29-.66-.64-1.2-1.09-1.6l.11-.16zm-5.38 3.12c-.07-2.23 1.73-3.37 3.02-3.37.95 0 1.76.48 2.05 1.2l-5.07 2.17zM65.98 17.5h2.55V.38h-2.55V17.5z"/></svg>
+                </div>
+                <h3>Sign in with Google</h3>
+                <p>to continue to <b>AdIQ Business Manager</b></p>
+            </div>
+            <div class="goauth-account" onclick="goauthSelectAccount()">
+                <div class="goauth-avatar">TB</div>
+                <div class="goauth-account-info">
+                    <div class="account-name">Ty Bray</div>
+                    <div class="account-email">tydupdetailing@gmail.com</div>
+                </div>
+                <span style="margin-left:auto; color:#5F6368; font-size:18px;">&#9654;</span>
+            </div>
+            <div class="goauth-perms" id="goauthPerms" style="display:none;">
+                <div class="goauth-perms-title">AdIQ Business Manager wants to:</div>
+                <div class="goauth-perm-item">
+                    <div class="goauth-perm-icon blue">&#128100;</div>
+                    <span>View and manage your <b>Google Business Profile</b> listings</span>
+                </div>
+                <div class="goauth-perm-item">
+                    <div class="goauth-perm-icon green">&#9733;</div>
+                    <span>Read and respond to <b>reviews</b> on your behalf</span>
+                </div>
+                <div class="goauth-perm-item">
+                    <div class="goauth-perm-icon orange">&#128340;</div>
+                    <span>Update business hours, photos, and service information</span>
+                </div>
+                <div class="goauth-perm-item">
+                    <div class="goauth-perm-icon blue">&#128200;</div>
+                    <span>Access <b>performance insights</b> and analytics data</span>
+                </div>
+            </div>
+            <div class="goauth-privacy" id="goauthPrivacy" style="display:none;">
+                By clicking Allow, you let AdIQ access your info in accordance with their <a href="#">terms of service</a> and <a href="#">privacy policy</a>. You can change this at any time in your <a href="#">Google Account</a>.
+            </div>
+            <div class="goauth-footer" id="goauthFooter" style="display:none;">
+                <button class="goauth-btn-cancel" onclick="goauthCancel()">Cancel</button>
+                <button class="goauth-btn-allow" onclick="goauthAllow()">Allow</button>
+            </div>
+        </div>
+        <!-- Loading view -->
+        <div class="goauth-loading" id="goauthLoading">
+            <div class="g-spinner"></div>
+            <p style="font-size:14px; color:#5F6368;">Connecting to Google Business Profile...</p>
+            <p style="font-size:12px; color:#9AA0A6; margin-top:8px;">Granting manager access to Ty-D-Up Mobile Detailing</p>
+        </div>
+    </div>
+</div>
+
+<!-- DOCUSIGN SIGNING OVERLAY -->
+<div class="docusign-overlay" id="docusignOverlay">
+    <div class="ds-topbar">
+        <div class="ds-logo">
+            <div class="ds-logo-icon">D</div>
+            <span class="ds-logo-text">DocuSign</span>
+        </div>
+        <div class="ds-status">
+            <div class="ds-status-dot"></div>
+            <span class="ds-status-text">Secure signing session</span>
+        </div>
+    </div>
+    <div class="ds-body">
+        <div class="ds-document">
+            <div class="ds-doc-header">
+                <h3>AdIQ Partnership Agreement</h3>
+                <p>Sent by: sales@adiq.com &middot; March 30, 2026</p>
+            </div>
+            <div class="ds-doc-body">
+                <div class="ds-clause">
+                    <div class="ds-clause-title">Service Agreement</div>
+                    This Agreement is entered between AdIQ Digital Marketing Solutions and Ty-D-Up Mobile Detailing for digital marketing and business profile management services.
+                </div>
+                <div class="ds-clause">
+                    <div class="ds-clause-title">Term &amp; Billing</div>
+                    Initial term: 6 months. 90-day grace period before billing. Monthly investment: $149.99. Renews month-to-month after initial term.
+                </div>
+                <div class="ds-clause">
+                    <div class="ds-clause-title">Google Business Profile Authorization</div>
+                    Client grants AdIQ manager-level access via OAuth 2.0 for listing verification, review management, and profile optimization.
+                </div>
+
+                <!-- Initials Box -->
+                <div class="ds-initial-section" id="dsInitialSection">
+                    <div class="ds-initial-label">Initial</div>
+                    <div class="ds-initial-box" id="dsInitialBox">TB</div>
+                    <div class="ds-initial-text">I acknowledge the terms, billing structure, and 6-month minimum commitment described above.</div>
+                </div>
+
+                <div class="ds-clause">
+                    <div class="ds-clause-title">Included Services</div>
+                    Digital 360, Business Profile Optimization, AdIQ Score Dashboard, Custom Business Page, Call Tracking, and CustomerBase CRM.
+                </div>
+                <div class="ds-clause">
+                    <div class="ds-clause-title">Cancellation</div>
+                    Early termination within initial term: remaining months at 50% rate. After initial term: 30 days written notice.
+                </div>
+
+                <!-- Signature Box -->
+                <div class="ds-sig-section" id="dsSigSection">
+                    <div class="ds-sig-label">Sign</div>
+                    <div class="ds-sig-arrow" id="dsSigArrow">&#10148;</div>
+                    <div class="ds-sig-name" id="dsSigName">Ty A Bray</div>
+                    <div class="ds-sig-meta">
+                        <span id="dsSigDate"></span>
+                        <span id="dsSigIP"></span>
+                    </div>
+                </div>
+
+                <div style="padding:12px 0; font-size:11px; color:#9CA3AF; text-align:center; border-top:1px solid #E5E7EB; margin-top:16px;">
+                    &#128272; This document is encrypted and secured by DocuSign. IP address, timestamp, and browser fingerprint are recorded with your signature.
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ds-bottombar">
+        <div class="ds-progress" id="dsProgress">
+            <div class="ds-progress-bar"><div class="ds-progress-fill" id="dsProgressFill"></div></div>
+            <span id="dsProgressText">2 fields remaining</span>
+        </div>
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button class="ds-btn-other" onclick="dsCancel()">Other Actions</button>
+            <button class="ds-btn-sign" id="dsFinishBtn" disabled onclick="dsFinish()">FINISH</button>
+        </div>
     </div>
 </div>
 
@@ -1130,7 +1627,7 @@
 <script>
 let step = 1;
 const total = 7;
-const names = ['Sign Up','Contact Info','Plan & Billing','Business Info','Keywords','GMB Verify','Agreement'];
+const names = ['Sign Up','Find Business','Plan & Billing','Business Info','Keywords','GMB Verify','Agreement'];
 let direction = 1; // 1=forward, -1=back
 
 // Build dots
@@ -1161,22 +1658,15 @@ function render() {
     // Progress
     document.getElementById('progressBar').style.width = (step/total*100)+'%';
     document.getElementById('stepText').textContent = `Step ${step} of ${total}`;
-    document.getElementById('footerLabel').innerHTML = `Step ${step} of ${total} &mdash; ${names[step-1]}`;
 
     // Dots
     buildDots();
 
-    // Footer buttons
-    document.getElementById('backBtn').style.display = step === 1 ? 'none' : '';
-    const nextBtn = document.getElementById('nextBtn');
-    if(step === total) { nextBtn.style.display = 'none'; }
-    else { nextBtn.style.display = ''; nextBtn.textContent = 'Next \u2192'; }
-
     // Scroll top
     document.getElementById('mainArea').scrollTop = 0;
 
-    // Step 2: animate AI fields
-    if(step === 2) animateAIFields();
+    // Step 2: Places search — AI fields animate when user selects a result
+    // (animateAIFields is triggered by selectPlacesResult(), not on step enter)
 
     // Step 3: stagger-reveal product cards + price count-up
     if(step === 3) animateStep3();
@@ -1232,6 +1722,103 @@ emailInput.addEventListener('input', validateStep1);
 pwInput.addEventListener('input', validateStep1);
 pwConfirm.addEventListener('input', validateStep1);
 createBtn.addEventListener('click', () => { goNext(); });
+
+// ===== STEP 2: Google Places Search =====
+function handlePlacesSearch(value) {
+    const results = document.getElementById('placesResults');
+    if(value.length >= 3) {
+        results.style.display = 'block';
+        results.style.animation = 'slideIn 0.3s ease forwards';
+    } else {
+        results.style.display = 'none';
+    }
+}
+
+function selectPlacesResult() {
+    document.getElementById('placesResults').style.display = 'none';
+    document.getElementById('placesSearchInput').value = 'Ty-D-Up Mobile Detailing';
+    document.getElementById('placesSearchInput').classList.add('valid');
+    document.getElementById('placesSearchSection').style.opacity = '0.6';
+    document.getElementById('placesSearchSection').style.pointerEvents = 'none';
+
+    // Show contact fields and trigger AI animation
+    const section = document.getElementById('contactFieldsSection');
+    section.style.display = 'block';
+    section.style.animation = 'slideIn 0.4s ease forwards';
+
+    // Trigger the AI pre-fill animation
+    setTimeout(() => animateAIFields(), 300);
+}
+
+function showManualEntry() {
+    document.getElementById('placesResults').style.display = 'none';
+    document.getElementById('placesSearchSection').style.display = 'none';
+    document.getElementById('manualEntrySection').style.display = 'block';
+    document.getElementById('manualEntrySection').style.animation = 'slideIn 0.4s ease forwards';
+}
+
+// ===== STEP 4: GBP OAuth Authorization =====
+function simulateGBPAuth() {
+    // Show Google OAuth overlay instead of inline spinner
+    const overlay = document.getElementById('googleOAuthOverlay');
+    const perms = document.getElementById('goauthPerms');
+    const privacy = document.getElementById('goauthPrivacy');
+    const footer = document.getElementById('goauthFooter');
+    const loading = document.getElementById('goauthLoading');
+    const consent = document.getElementById('goauthConsent');
+
+    // Reset overlay state
+    perms.style.display = 'none';
+    privacy.style.display = 'none';
+    footer.style.display = 'none';
+    loading.classList.remove('show');
+    consent.style.display = 'block';
+
+    overlay.classList.add('show');
+}
+
+function goauthSelectAccount() {
+    // Show permissions after clicking the account
+    const perms = document.getElementById('goauthPerms');
+    const privacy = document.getElementById('goauthPrivacy');
+    const footer = document.getElementById('goauthFooter');
+
+    perms.style.display = 'block';
+    perms.style.animation = 'slideIn 0.3s ease forwards';
+
+    setTimeout(() => {
+        privacy.style.display = 'block';
+        privacy.style.animation = 'slideIn 0.3s ease forwards';
+    }, 150);
+
+    setTimeout(() => {
+        footer.style.display = 'flex';
+        footer.style.animation = 'slideIn 0.3s ease forwards';
+    }, 300);
+}
+
+function goauthCancel() {
+    document.getElementById('googleOAuthOverlay').classList.remove('show');
+}
+
+function goauthAllow() {
+    // Show loading state
+    document.getElementById('goauthConsent').style.display = 'none';
+    const loading = document.getElementById('goauthLoading');
+    loading.classList.add('show');
+
+    // After loading, close overlay and update Step 4
+    setTimeout(() => {
+        document.getElementById('googleOAuthOverlay').classList.remove('show');
+
+        // Update the button and status in Step 4
+        const btn = document.getElementById('gbpAuthBtn');
+        btn.style.display = 'none';
+        const status = document.getElementById('gbpAuthStatus');
+        status.style.display = 'flex';
+        status.style.animation = 'slideIn 0.4s ease forwards';
+    }, 1800);
+}
 
 // ===== STEP 2: AI Animation =====
 // Phase 1: Skeleton shimmer (all fields grey with shimmer)
@@ -1533,6 +2120,14 @@ document.getElementById('confirmStep4Btn').addEventListener('click', function() 
         btn.style.transform = 'scale(1.02)';
         setTimeout(() => { btn.style.transform = 'scale(1)'; }, 200);
     }, totalSweepTime + 1400);
+
+    // Show GBP Authorization Gate after all animations
+    setTimeout(() => {
+        const authGate = document.getElementById('gbpAuthGate');
+        authGate.style.display = 'block';
+        authGate.style.animation = 'slideIn 0.4s ease forwards';
+        authGate.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, totalSweepTime + 2200);
 
 });
 
@@ -1849,16 +2444,91 @@ function checkAcks() {
     }
 }
 
-// Sign agreement — pen draws signature line, then services activate
+// Sign agreement — open DocuSign overlay first
 function signAgreement() {
     const allChecked = [...document.querySelectorAll('.ack-box')].every(b => b.checked);
     if(!allChecked) return;
 
+    // Open DocuSign overlay
+    const overlay = document.getElementById('docusignOverlay');
+    const initialBox = document.getElementById('dsInitialBox');
+    const sigName = document.getElementById('dsSigName');
+    const sigArrow = document.getElementById('dsSigArrow');
+    const finishBtn = document.getElementById('dsFinishBtn');
+    const progressFill = document.getElementById('dsProgressFill');
+    const progressText = document.getElementById('dsProgressText');
+
+    // Reset overlay state
+    initialBox.classList.remove('signed');
+    sigName.classList.remove('signed');
+    sigArrow.style.display = 'block';
+    finishBtn.disabled = true;
+    finishBtn.classList.remove('complete');
+    finishBtn.textContent = 'FINISH';
+    progressFill.style.width = '0%';
+    progressText.textContent = '2 fields remaining';
+    document.getElementById('dsSigDate').textContent = '';
+    document.getElementById('dsSigIP').textContent = '';
+
+    overlay.classList.add('show');
+
+    // Auto-animate: initial appears after 1.2s
+    setTimeout(() => {
+        initialBox.classList.add('signed');
+        progressFill.style.width = '50%';
+        progressText.textContent = '1 field remaining';
+    }, 1200);
+
+    // Signature appears after 2.5s
+    setTimeout(() => {
+        sigArrow.style.display = 'none';
+        sigName.classList.add('signed');
+        document.getElementById('dsSigDate').textContent = 'Signed: ' + new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' }) + ' ' + new Date().toLocaleTimeString('en-US', { hour:'2-digit', minute:'2-digit' });
+        document.getElementById('dsSigIP').textContent = 'IP: 172.16.xxx.xxx';
+
+        // Update progress
+        progressFill.style.width = '100%';
+        progressText.textContent = 'All fields complete';
+
+        // Enable finish button
+        setTimeout(() => {
+            finishBtn.disabled = false;
+            finishBtn.style.animation = 'slideIn 0.3s ease';
+        }, 400);
+    }, 2500);
+}
+
+function dsCancel() {
+    document.getElementById('docusignOverlay').classList.remove('show');
+    // Re-enable the sign button
+    const btn = document.getElementById('signBtn');
+    btn.disabled = false;
+    btn.innerHTML = '\u270D Sign Agreement';
+}
+
+function dsFinish() {
+    const finishBtn = document.getElementById('dsFinishBtn');
+    finishBtn.disabled = true;
+    finishBtn.innerHTML = '<span class="spinner" style="border-color:#1B1C20;border-top-color:transparent;width:14px;height:14px;"></span> Processing...';
+
+    setTimeout(() => {
+        finishBtn.classList.add('complete');
+        finishBtn.innerHTML = '\u2713 COMPLETE';
+
+        // Close overlay and run the original signing animation on the card
+        setTimeout(() => {
+            document.getElementById('docusignOverlay').classList.remove('show');
+            completeSigningOnCard();
+        }, 800);
+    }, 1200);
+}
+
+// After DocuSign overlay closes, animate the card's signature area + services
+function completeSigningOnCard() {
     const btn = document.getElementById('signBtn');
     btn.disabled = true;
     btn.innerHTML = '<span class="spinner"></span> Signing...';
 
-    // Phase 1: Draw signature line
     const sigLine = document.getElementById('sigLine');
     const sigText = document.getElementById('sigText');
     const sigArea = document.getElementById('sigArea');
@@ -1867,7 +2537,7 @@ function signAgreement() {
     sigLine.classList.add('drawing');
     placeholder.style.display = 'none';
 
-    // Phase 2: Signature text appears with typewriter
+    // Signature text appears with typewriter
     setTimeout(() => {
         sigText.classList.add('show');
         sigText.style.display = 'block';
@@ -1882,14 +2552,14 @@ function signAgreement() {
         }, 80);
     }, 600);
 
-    // Phase 3: Mark signed
+    // Mark signed
     setTimeout(() => {
         sigArea.classList.add('signed');
         btn.innerHTML = '\u2713 Agreement Signed!';
         btn.classList.add('green');
     }, 1600);
 
-    // Phase 4: Services activate with staggered checkmarks
+    // Services activate with staggered checkmarks
     setTimeout(() => {
         const svcSection = document.getElementById('svcActivate');
         svcSection.style.display = 'block';
@@ -1902,7 +2572,7 @@ function signAgreement() {
             }, i * 200);
         });
 
-        // Phase 5: "Your digital marketing engine is live" typewriter
+        // "Your digital marketing engine is live" typewriter
         const totalSvcTime = items.length * 200 + 400;
         setTimeout(() => {
             const engineEl = document.getElementById('engineLive');
@@ -1915,7 +2585,6 @@ function signAgreement() {
                 engineEl.textContent = msg.substring(0, idx);
                 if(idx >= msg.length) {
                     clearInterval(engInt);
-                    // Show Complete Onboarding button after everything
                     setTimeout(() => {
                         btn.innerHTML = 'Complete Onboarding \u2192';
                         btn.classList.remove('green');
